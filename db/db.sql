@@ -16,3 +16,11 @@ CREATE TABLE Posts (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE Followers (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    follower_id BIGINT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES User(id),
+    FOREIGN KEY (follower_id) REFERENCES User(id),
+    PRIMARY KEY (id)
+);
