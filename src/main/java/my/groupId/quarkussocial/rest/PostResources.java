@@ -1,6 +1,5 @@
 package my.groupId.quarkussocial.rest;
 
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Sort;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -8,7 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import my.groupId.quarkussocial.domain.model.Post;
-import my.groupId.quarkussocial.domain.model.User;
+import my.groupId.quarkussocial.domain.model.UserEntity;
 import my.groupId.quarkussocial.domain.repository.FollowerRepository;
 import my.groupId.quarkussocial.domain.repository.PostRepository;
 import my.groupId.quarkussocial.domain.repository.UserRepository;
@@ -37,7 +36,7 @@ public class PostResources {
     @POST
     @Transactional
     public Response savePost(@PathParam("userId") Long userId, CreatePostRequest request) {
-        User user = userRepository.findById(userId);
+        UserEntity user = userRepository.findById(userId);
         if(user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -51,7 +50,7 @@ public class PostResources {
 
     @GET
     public Response listPost(@PathParam("userId") Long userId, @HeaderParam("followerId") Long followerId) {
-        User user = userRepository.findById(userId);
+        UserEntity user = userRepository.findById(userId);
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -60,7 +59,7 @@ public class PostResources {
             return Response.status(Response.Status.BAD_REQUEST).entity("You forgot the header followerId").build();
         }
 
-        User follower = userRepository.findById(followerId);
+        UserEntity follower = userRepository.findById(followerId);
 
         if(follower == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Inexistent followerId").build();

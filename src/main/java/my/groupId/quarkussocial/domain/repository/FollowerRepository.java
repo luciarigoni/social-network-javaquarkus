@@ -5,16 +5,14 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import my.groupId.quarkussocial.domain.model.Follower;
-import my.groupId.quarkussocial.domain.model.User;
+import my.groupId.quarkussocial.domain.model.UserEntity;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @ApplicationScoped
 public class FollowerRepository implements PanacheRepository<Follower> {
-    public boolean follows(User follower, User user) {
+    public boolean follows(UserEntity follower, UserEntity user) {
 //        Map<String, Object> params = new HashMap<>();
 //        params.put("follower", follower);
 //        params.put("user", user);

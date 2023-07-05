@@ -2,12 +2,10 @@ package my.groupId.quarkussocial.domain.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Objects;
-
 @Entity
-@Table(name = "User")
+@Table(name = "UserEntity")
 @Data
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

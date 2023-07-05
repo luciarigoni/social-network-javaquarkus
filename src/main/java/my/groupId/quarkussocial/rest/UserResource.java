@@ -1,8 +1,5 @@
 package my.groupId.quarkussocial.rest;
 
-import com.oracle.svm.core.annotate.Delete;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -11,7 +8,7 @@ import jakarta.validation.Validator;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import my.groupId.quarkussocial.domain.model.User;
+import my.groupId.quarkussocial.domain.model.UserEntity;
 import my.groupId.quarkussocial.domain.repository.UserRepository;
 import my.groupId.quarkussocial.rest.dto.CreateUserRequest;
 import my.groupId.quarkussocial.rest.dto.ResponseError;
@@ -51,7 +48,7 @@ public class UserResource {
             //return Response.status(400).entity(responseError).build();
         }
 
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setAge(userRequest.getAge());
         user.setName(userRequest.getName());
 
@@ -66,7 +63,7 @@ public class UserResource {
     @GET
     public Response listAllUsers() {
 
-        PanacheQuery<User> query = repository.findAll();
+        PanacheQuery<UserEntity> query = repository.findAll();
         return Response.ok(query.list()).build();
     }
 
@@ -74,7 +71,7 @@ public class UserResource {
     @Path("{id}")
     @Transactional
     public Response deleteUser(@PathParam("id") Long id) {
-        User user = repository.findById(id);
+        UserEntity user = repository.findById(id);
 
         if(user != null) {
             repository.delete(user);
@@ -88,7 +85,7 @@ public class UserResource {
     @Path("/{id}")
     @Transactional
     public Response updateUser(@PathParam("id") Long id, CreateUserRequest userData) {
-        User user = repository.findById(id);
+        UserEntity user = repository.findById(id);
 
         if(user != null) {
             user.setName(userData.getName());
