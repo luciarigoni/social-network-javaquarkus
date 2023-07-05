@@ -5,7 +5,11 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import my.groupId.quarkussocial.domain.model.Follower;
+import my.groupId.quarkussocial.domain.model.Post;
 import my.groupId.quarkussocial.domain.model.UserEntity;
+import my.groupId.quarkussocial.domain.repository.FollowerRepository;
+import my.groupId.quarkussocial.domain.repository.PostRepository;
 import my.groupId.quarkussocial.domain.repository.UserRepository;
 import my.groupId.quarkussocial.rest.dto.CreatePostRequest;
 import org.hamcrest.Matchers;
@@ -22,16 +26,50 @@ class PostResourcesTest {
 
     @Inject
     UserRepository userRepository;
+    @Inject
+    FollowerRepository followerRepository;
+
+    @Inject
+    PostRepository postRepository;
     Long userId;
+    Long userNotFollowerId;
+    Long userFollowerId;
 
     @BeforeEach
     @Transactional
     public void setUP() {
+
+        //usuario padrao dos testes
         var user = new UserEntity();
         user.setAge(30);
         user.setName("Fulano");
         userRepository.persist(user);
         userId = user.getId();
+
+        //criada a postagem para o usuario
+        Post post = new Post();
+        post.setText("Hello");
+        post.setUser(user);
+        postRepository.persist(post);
+
+        //usuario nao seguidor
+        var userNotFollower = new UserEntity();
+        userNotFollower.setAge(30);
+        userNotFollower.setName("Cicrano");
+        userRepository.persist(userNotFollower);
+        userNotFollowerId = userNotFollower.getId();
+
+        //usuario seguidor
+        var userFollower = new UserEntity();
+        userFollower.setAge(30);
+        userFollower.setName("Cicrano");
+        userRepository.persist(userFollower);
+        userFollowerId = userFollower.getId();
+
+        Follower follower = new Follower();
+        follower.setUser(user);
+        follower.setFollower(userFollower);
+        followerRepository.persist(follower);
     }
     @Test
     @DisplayName("should create a post for a user")
@@ -116,11 +154,29 @@ class PostResourcesTest {
     @DisplayName("should return 203 when follower is not follower")
     public void listPostNotAFollower() {
 
+        given()
+                .pathParam("userId", userId)
+                .header("followerId", userNotFollowerId)
+                .when()
+                .get()
+                .then()
+                .statusCode(403)
+                .body(Matchers.is("You cannot see these posts."));
+
+
     }
 
     @Test
     @DisplayName("should list posts")
     public void listPostsTest() {
+        given()
+                .pathParam("userId", userId)
+                .header("followerId", userFollowerId)
+                .when()
+                .get()
+                .then()
+                .statusCode(200)
+                .body("size()", Matchers.is(1));
 
     }
 }
