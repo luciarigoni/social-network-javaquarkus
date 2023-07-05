@@ -118,9 +118,9 @@ class PostResourcesTest {
 
     }
 
-//    @Test
-//    @DisplayName("should return posts")
-//    public void listPostNotAFollower() {
-//
-//    }
+    @Test
+    @DisplayName("should list posts")
+    public void listPostsTest() {
+
+    }
 }
