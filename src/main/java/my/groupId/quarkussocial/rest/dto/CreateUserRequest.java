@@ -4,11 +4,7 @@ package my.groupId.quarkussocial.rest.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 @Data
 public class CreateUserRequest {
 
@@ -17,7 +13,5 @@ public class CreateUserRequest {
     @NotNull(message = "Age is required")
     private Integer age;
 
-    public CreateUserRequest() {
-    }
 
 }

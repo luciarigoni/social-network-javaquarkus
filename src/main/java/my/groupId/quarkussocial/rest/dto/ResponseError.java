@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.Response;
 import lombok.Data;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,7 @@ public class ResponseError {
     public static final int UNPROCESSABLE_ENTITY_STATUS = 422;
 
     private String message;
-    private static Collection<FieldError> errors;
+    private Collection<FieldError> errors;
 
     public ResponseError(String message, Collection<FieldError> errors) {
         this.message = message;
@@ -22,7 +23,7 @@ public class ResponseError {
     }
 
     public static <T> ResponseError createFromValidation(Set<ConstraintViolation<T>> violations) {
-        violations
+        List<FieldError> errors = violations
                 .stream()
                 .map( cv -> new FieldError(cv.getPropertyPath().toString(), cv.getMessage()) )
                 .collect(Collectors.toList());
